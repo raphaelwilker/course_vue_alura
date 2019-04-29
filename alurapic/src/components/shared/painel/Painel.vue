@@ -2,10 +2,12 @@
 
     <div class="painel">
         <h2 class="painel-titulo" @dblclick="visivel = !visivel">{{titulo}}</h2>
-        <figure v-show="visivel">
-	        <slot class="painel-corpo" >
-	        </slot><!-- fim painel-corpo -->
-        </figure>
+        <transition name="painel-fade">
+	        <figure v-show="visivel">
+		        <slot class="painel-corpo" >
+		        </slot><!-- fim painel-corpo -->
+	        </figure>
+        </transition>
         
     </div><!-- fim painel -->
 
