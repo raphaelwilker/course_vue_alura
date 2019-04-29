@@ -42,3 +42,8 @@
     padding: 10px;
     text-transform: uppercase;
 }
+
+.filtro {
+    display: block;
+    width: 100%;
+}
