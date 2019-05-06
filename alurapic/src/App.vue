@@ -11,7 +11,7 @@
     <!-- <img :src="photo.url" :alt="photo.alt"/> -->
     <ul class="lista-photos">
 
-      <li class="lista-photos-item" v-for="foto of fotosComfiltro">
+      <li class="lista-photos-item" v-for="foto of fotosComFiltro">
         <meu-painel :titulo="foto.titulo">
             <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
         </meu-painel>
