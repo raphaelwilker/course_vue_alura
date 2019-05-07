@@ -13,13 +13,13 @@
 
       <li class="lista-photos-item" v-for="foto of fotosComFiltro">
         <meu-painel :titulo="foto.titulo">
-            <imagem-responsiva :url="foto.url" :titulo="foto.titulo"/>
+            <imagem-responsiva v-meu-transform:scale.animate.reverse="1.2" :url="foto.url" :titulo="foto.titulo"/>
             <meu-botao 
               rotulo="Remover" 
               tipo="button"  
               @botaoAtivado="remove(foto)"
-              :confirmacao="false"
-              estilo="padrao"
+              :confirmacao="true"
+              estilo="perigo"
               />
         </meu-painel>
       </li>
