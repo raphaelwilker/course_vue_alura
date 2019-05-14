@@ -1,6 +1,7 @@
 <template>
 	<div>
-		<h1 class="centralizado">Cadastro</h1>
+		<h1 v-if="foto._id" class="centralizado">Alteração</h1>
+    	<h1 v-else class="centralizado">Inclusão</h1>
 		<h2 class="centralizado">{{ foto.titulo }}</h2>
 
 		<form @submit.prevent="grava()">
@@ -10,7 +11,10 @@
 		    	id="titulo" 
 		    	autocomplete="off" 
 		    	v-model.lazy="foto.titulo"
+					v-validate
+					data-vv-rules="required"
 		    	>
+					<span v-show="errors.has('titulo')">{{ errors.first('titulo') }}</span>
 		  </div>
 
 		  <div class="controle">
@@ -38,7 +42,7 @@
 
 		  <div class="centralizado">
 		    <meu-botao rotulo="GRAVAR" tipo="submit" estilo="padrao"/>
-		    <router-link to="/"><meu-botao rotulo="VOLTAR" tipo="button" estilo="padrao"/></router-link>
+		    <router-link :to="{name: 'home'}"><meu-botao rotulo="VOLTAR" tipo="button" estilo="padrao"/></router-link>
 		  </div>
 
 		</form>
@@ -51,6 +55,7 @@ import ImagemResponsiva from '../shared/imagem-responsiva/ImagemResponsiva.vue'
 import Botao from '../shared/botao/Botao.vue';
 
 import Foto from '../../domain/foto/Foto.js';
+import FotoService from '../../domain/foto/FotoService';
 
 export default {
 
@@ -63,7 +68,8 @@ export default {
 	data() {
 	    return {
 
-	      foto: new Foto()
+	      foto: new Foto(),
+	      id: this.$route.params.id
 
 	    }
 	},
@@ -71,12 +77,32 @@ export default {
 	methods: {
 
 		grava() {
-
+			
+			this.service
+				.cadastra(this.foto)
+				.then(() => {
+					if(this.id) this.$router.push({ name: 'home'});
+					this.foto = new Foto()
+				},
+					err => console.log(err)
+				);
+			/*
 			this.$http
-	        .post('http://localhost:3000/v1/fotos', this.foto)
+	        .post('v1/fotos', this.foto)
 	        .then(() => this.foto = new Foto(), err => console.log(err));
+	        */
 		}
 
+	},
+
+	created() {
+		this.service = new FotoService(this.$resource);
+
+		if(this.id){
+			this.service
+				.busca(this.id)
+				.then(foto => this.foto = foto);
+		}
 	}
 }
 
@@ -105,4 +131,9 @@ export default {
   .centralizado {
     text-align: center;
   }
+
+	.erro {
+    color: red;
+  }
+
 </style>
