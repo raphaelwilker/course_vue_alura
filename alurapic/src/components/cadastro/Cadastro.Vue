@@ -8,22 +8,29 @@
 		  <div class="controle">
 		    <label for="titulo">TÍTULO</label>
 		    <input  
-		    	id="titulo" 
+		    	id="titulo"
+					name="titulo" 
 		    	autocomplete="off" 
-		    	v-model.lazy="foto.titulo"
+		    	v-model="foto.titulo"
 					v-validate
-					data-vv-rules="required"
+					data-vv-rules="required|min:3|max:30"
 		    	>
-					<span v-show="errors.has('titulo')">{{ errors.first('titulo') }}</span>
+					<span v-show="errors.has('titulo')" class="erro">{{ errors.first('titulo') }}</span>
 		  </div>
 
 		  <div class="controle">
 		    <label for="url">URL</label>
 		    <input 
 		    	id="url"
+					name="url"
 		    	autocomplete="off"
-		    	v-model.lazy="foto.url"
+		    	v-model="foto.url"
+					v-validate
+					data-vv-rules="required|min:3|max:30"
 		    >
+				<span class="erro" v-show="errors.has('url')">
+						{{ errors.first('url') }}
+				</span>
 		    <imagem-responsiva 
 		    	v-show="foto.url"
 		    	:url="foto.url"
@@ -77,15 +84,21 @@ export default {
 	methods: {
 
 		grava() {
+			this.$validator
+			.validateAll()
+			.then(success => {
+				if(success){
+					this.service
+					.cadastra(this.foto)
+					.then(() => {
+						if(this.id) this.$router.push({ name: 'home'});
+						this.foto = new Foto()
+					},
+						err => console.log(err)
+					);
+				}
+			})
 			
-			this.service
-				.cadastra(this.foto)
-				.then(() => {
-					if(this.id) this.$router.push({ name: 'home'});
-					this.foto = new Foto()
-				},
-					err => console.log(err)
-				);
 			/*
 			this.$http
 	        .post('v1/fotos', this.foto)
@@ -108,32 +121,6 @@ export default {
 
 </script>
 <style scoped>
-    
-  .centralizado {
-    text-align: center;
-  }
-  .controle {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-
-  }
-  .controle label {
-    display: block;
-    font-weight: bold;
-  }
-
- .controle label + input, .controle textarea {
-    width: 100%;
-    font-size: inherit;
-    border-radius: 5px
-  }
-
-  .centralizado {
-    text-align: center;
-  }
-
-	.erro {
-    color: red;
-  }
+  
 
 </style>

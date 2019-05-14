@@ -14,7 +14,7 @@
     <!-- <img :src="photo.url" :alt="photo.alt"/> -->
     <ul class="lista-photos">
 
-      <li class="lista-photos-item" v-for="foto of fotosComFiltro">
+      <li class="lista-photos-item" v-for="foto of fotosComFiltro" :key="foto._id">
         <meu-painel :titulo="foto.titulo">
             <imagem-responsiva v-meu-transform:scale.animate.reverse="1.2" :url="foto.url" :titulo="foto.titulo"/>
             <router-link :to="{name: 'altera', params: {id: foto._id}}">
